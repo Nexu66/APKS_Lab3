@@ -25,7 +25,7 @@ module tb_spi_master;
     parameter integer SCLK_FREQ = 1_000_000;
 
     localparam real    T_CLK  = 1.0e9 / CLK_FREQ;              // період clk, нс
-    localparam integer HALF   = CLK_FREQ / (2 * SCLK_FREQ);     // тактів на половину SCLK
+    localparam integer HALF   = (CLK_FREQ + 2 * SCLK_FREQ - 1) / (2 * SCLK_FREQ);  // тактів на половину SCLK (як у RTL)
     localparam real    T_HALF = HALF * T_CLK;                   // очікувана половина періоду SCLK, нс
     localparam real    T_V    = 8.0;                            // затримка MISO у моделі веденого, нс
     localparam real    EPS    = 0.01;                           // допуск порівняння часу, нс
