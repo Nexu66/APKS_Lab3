@@ -1,0 +1,4 @@
+# keep shell scripts runnable on Linux/macOS and in Git Bash
+*.sh text eol=lf
+*.v  text eol=lf
+*.py text eol=lf
