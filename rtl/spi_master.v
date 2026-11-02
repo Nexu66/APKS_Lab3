@@ -83,7 +83,9 @@ module spi_master #(
                      S_GAP  = 3'd4;   // мінімальний час SS_n = 1 між транзакціями
 
     reg  [2:0]    state;
-    reg           cpol_r, cpha_r;     // режим, зафіксований на початку транзакції
+    reg           cpha_r;             // CPHA, зафіксований на початку транзакції
+                                      // (CPOL окремо не зберігається: рівень SCLK
+                                      //  повертається до спокою після 16 фронтів)
     reg  [7:0]    left;               // скільки байтів ще залишилось після поточного
     reg  [HW-1:0] hcnt;               // лічильник тактів у половині періоду SCLK
     reg  [3:0]    ecnt;               // номер фронту в байті: парний — передній, непарний — задній
@@ -124,7 +126,6 @@ module spi_master #(
             state  <= S_IDLE;
             ss_n   <= 1'b1;
             sclk   <= 1'b0;
-            cpol_r <= 1'b0;
             cpha_r <= 1'b0;
             left   <= 8'd0;
             hcnt   <= {HW{1'b0}};
@@ -138,7 +139,6 @@ module spi_master #(
                     hcnt <= {HW{1'b0}};
                     ecnt <= 4'd0;
                     if (cmd_start) begin
-                        cpol_r <= cmd_cpol;
                         cpha_r <= cmd_cpha;
                         left   <= (cmd_len == 8'd0) ? 8'd0 : cmd_len - 8'd1;
                         state  <= S_LEAD;
